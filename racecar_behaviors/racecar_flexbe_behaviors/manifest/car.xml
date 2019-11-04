@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<behavior name="Car">
+
+	<executable package_path="racecar_flexbe_behaviors.car_sm" class="CarSM" />
+	<tagstring>helo</tagstring>
+	<author>Earl</author>
+	<date>Thu Oct 31 2019</date>
+	<description>
+		Race 
+	</description>
+
+
+	<!-- Contained Behaviors -->
+
+	<!-- Available Parameters -->
+	<params>
+
+		<param type="numeric" name="my_speed" default="0.4" label="my_speed" hint="Sets the my_speed">
+			<min value="0" />
+			<max value="1" />
+		</param>
+
+		<param type="numeric" name="my_travel_dist" default="5" label="my_travel_dist" hint="Sets the my_travel_dist">
+			<min value="0" />
+			<max value="10" />
+		</param>
+
+		<param type="numeric" name="my_obstacle_dist" default="3" label="my_obstacle_dist" hint="Sets the my_obstacle_dist">
+			<min value="0" />
+			<max value="7" />
+		</param>
+
+	</params>
+
+
+</behavior>
