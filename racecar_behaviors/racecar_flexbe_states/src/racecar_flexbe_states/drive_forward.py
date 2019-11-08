@@ -41,7 +41,7 @@ class GoFowardState(EventState):
         super(GoFowardState, self).__init__(outcomes=['failed', 'done'])
         self._start_time = None
         self.depth = None
-        self._speed = speed
+        self._speed = -0.07
         self._travel_dist = travel_dist
         self._obstacle_dist = obstacle_dist
         self._proportional_turning_constant = proportional_turning_constant
@@ -61,39 +61,47 @@ class GoFowardState(EventState):
         if not self.cmd_pub: # check if  message in self.cmd_pub to publish to /cmd_vel else we exit
             return 'failed'
         #run obstacle checks [index 0: left, 360: middle, 719: right]
-        if(self.depth is not None):
-            Logger.loginfo('FWD obstacle distance is: %s and dist thres is : %s'\
-		 % (self.depth.center, self._obstacle_dist))
-            if self.depth.center <= self._obstacle_dist:
-                self.cmd_pub.vel = 0.0
-                self.cmd_pub.angle = 0.0
-                self.pub.publish(self.vel_topic, self.cmd_pub)
-                return 'done'
+        #if(self.depth is not None):
+            #Logger.loginfo('FWD obstacle distance is: %s and dist thres is : %s'\
+#		 % (self.depth.center, self._obstacle_dist))
+           # if self.depth.center <= self._obstacle_dist and self.depth.right > 5000:
+            #    self.cmd_pub.vel = 0.0
+             #   self.cmd_pub.angle = 0.0
+             #   self.pub.publish(self.vel_topic, self.cmd_pub)
+              #  return 'done'
 
-            Logger.loginfo('45 deg distance left: %s, right: %s' % (self.depth.left,self.depth.right))
+        #Logger.loginfo('45 deg distance left: %s, center: %s, right: %s' % (self.depth.left, self.depth.center, self.depth.right))
+	     
             #angle_diff = self.image.data[0] - self.image.data[2]
 
-	    angle_diff = self.depth.left - self.depth.right
-
-            if angle_diff >= self._angle_diff_thresh:
-                Logger.loginfo('Reached angle diff threshold')
-                # return 'failed'
+	   # angle_diff = self.depth.left - self.depth.right
+	angle_diff = -(self.depth.center - 1500)
+	if angle_diff < 0:
+		#Logger.loginfo("Turn Left")
+		pass
+	else:
+		#Logger.loginfo("Turn Right")
+		pass
+            #if angle_diff >= self._angle_diff_thresh:
+                #Logger.loginfo('Reached angle diff threshold')
+                #return 'failed'
 
             # Proportional controller
-            self.cmd_pub.angle =  angle_diff * self._proportional_turning_constant
-	    self.cmd_pub.angle = max(-0.3 , min(0.3 , self.cmd_pub.angle))
-            Logger.loginfo('Turning Angle is: %s' % self.cmd_pub.angle)
+        self.cmd_pub.angle =  angle_diff * self._proportional_turning_constant
+	self.cmd_pub.angle = max(-0.3 , min(0.3 , self.cmd_pub.angle))
+            #Logger.loginfo('Turning Angle is: %s' % self.cmd_pub.angle)
 
             #measure distance travelled
-            elapsed_time = (rospy.Time.now() - self._start_time).to_sec()
-            distance_travelled = elapsed_time * self._speed
+        elapsed_time = (rospy.Time.now() - self._start_time).to_sec()
+        distance_travelled = elapsed_time * self._speed
 
-            if distance_travelled >= self._travel_dist:
-                Logger.loginfo('Traveled over threshold')
+        if distance_travelled >= self._travel_dist:
+                #Logger.loginfo('Traveled over threshold')
                 return 'failed'
-
+	
         #drive
-        self.pub.publish(self.vel_topic, self.cmd_pub)
+	if self.depth.center != 0:
+        	self.pub.publish(self.vel_topic, self.cmd_pub)
 
     def on_enter(self, userdata):
         Logger.loginfo("Drive FWD STARTED!")
@@ -106,19 +114,19 @@ class GoFowardState(EventState):
         self.cmd_pub.vel = 0.0
         self.cmd_pub.angle = 0.0
         self.pub.publish(self.vel_topic, self.cmd_pub)
-        Logger.loginfo("Drive FWD ENDED!")
+        #Logger.loginfo("Drive FWD ENDED!")
 
     def on_start(self):
         Logger.loginfo("Drive FWD READY!")
         self._start_time = rospy.Time.now() #bug detected! (move to on_enter)
 
     def on_stop(self):
-		Logger.loginfo("Drive FWD STOPPED!")
+	#Logger.loginfo("Drive FWD STOPPED!")
+	pass
 
     def scan_callback(self, data):
-        self.depth = data
-        
-	
+        self.depth = data        
+	self.depth.right = self.depth.right + 500
 	#try:
 	#	self.image.data = [ ord(x) for x in list(data.data)]
 	#except:

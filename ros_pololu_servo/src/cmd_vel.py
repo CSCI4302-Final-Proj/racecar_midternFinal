@@ -54,7 +54,7 @@ class publish_driving(object): # needed for python 2 , implicit in python 3
         self._drive_msg_steering.position = msg.angle
 
         self._drive_publisher.publish(self._drive_msg_motor)
-	rospy.sleep(0.1)
+	#rospy.sleep(0.1)
 	self._drive_publisher.publish(self._drive_msg_steering)
 
 

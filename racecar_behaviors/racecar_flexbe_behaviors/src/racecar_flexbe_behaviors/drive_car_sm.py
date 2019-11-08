@@ -88,7 +88,7 @@ class DriveCarSM(Behavior):
 			# x:392 y:386
 			OperatableStateMachine.add('Drive Foward State 3',
 										GoFowardState(speed=self.my_speed, travel_dist=self.my_travel_dist, obstacle_dist=self.my_obstacle_dist, proportional_turning_constant=self.my_proportional_turning_constant, angle_diff_thresh=self.my_angle_diff_thresh),
-										transitions={'failed': 'failed', 'done': 'finished'},
+										transitions={'failed': 'failed', 'done': 'Drive Forward State 1'},
 										autonomy={'failed': Autonomy.Off, 'done': Autonomy.High})
 
 			# x:821 y:313

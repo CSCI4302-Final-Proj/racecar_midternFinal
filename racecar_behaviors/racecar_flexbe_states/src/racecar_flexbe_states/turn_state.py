@@ -57,11 +57,11 @@ class TurnState(EventState):
 
     def execute(self, userdata):
         if not self.cmd_pub: # check if  message in self.cmd_pub to publish to /cmd_vel else we exit
-            Logger.loginfo('messesage does not exist')
+#            Logger.loginfo('messesage does not exist')
             return 'failed'
         #run obstacle checks [index 0: left, 360: middle, 719: right]
         if(self.depth is not None):
-            Logger.loginfo('FWD free distance is: %s' % self.depth.center)
+#            Logger.loginfo('FWD free distance is: %s' % self.depth.center)
 	    Logger.loginfo('Turn angle is : %s' % self._turn_angle)
             if self.depth.center >= self._forward_dist:
                 return 'done'
@@ -70,14 +70,14 @@ class TurnState(EventState):
             elapsed_time = (rospy.Time.now() - self._start_time).to_sec()
 
             if elapsed_time >= self._timeout:
-                Logger.loginfo('Reached timeout')
+ #               Logger.loginfo('Reached timeout')
                 return 'failed'
 
         #drive
         self.pub.publish(self.vel_topic, self.cmd_pub)
 
     def on_enter(self, userdata):
-        Logger.loginfo("Turn RIGHT STARTED!")
+  #      Logger.loginfo("Turn RIGHT STARTED!")
         #set robot speed here
         self.cmd_pub = Twist_float()
         self.cmd_pub.vel = self._t_speed
@@ -92,12 +92,13 @@ class TurnState(EventState):
         Logger.loginfo("Turn RIGHT ENDED!")
 
     def on_start(self):
-        Logger.loginfo("Drive FWD READY!")
+   #     Logger.loginfo("Drive FWD READY!")
         self._start_time = rospy.Time.now() #bug detected! (move to on_enter)
 
 
     def on_stop(self):
-		Logger.loginfo("Turn RIGHT STOPPED!")
+#		Logger.loginfo("Turn RIGHT STOPPED!")
+	pass
 
     def scan_callback(self, data):
         self.depth = data

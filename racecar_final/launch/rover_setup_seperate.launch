@@ -12,7 +12,4 @@
 <!-- run cmd_vel node -->
 <node pkg="ros_pololu_servo" type="cmd_vel.py" name="cmd_vel_node"/>
 
-<!-- run drive node -->
-<node pkg="racecar_flexbe_states" type="drive_forward_noflex.py" name="drive_forward_noflex_node" output="screen"/>
-
 </launch>
